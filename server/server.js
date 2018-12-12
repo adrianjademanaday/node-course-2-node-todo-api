@@ -1,69 +1,33 @@
-var mongoose = require('mongoose');
+var express = require('express');
+var bodyParser = require('body-parser');
 
-mongoose.Promise = global.Promise;
+var {mongoose} = require('./db/mongoose');
+var {Todo} = require('./models/Todo');
+var {User} = require('./models/User');
 
-mongoose.connect('mongodb://localhost:27017/TodoApp');
+var app = express();
 
-var Todo = mongoose.model('Todo', {
-   text: {
-       type: String,
-       required: true,
-       minlength: 1,
-       trim: true
-   }, 
-   completed: {
-       type: Boolean,
-       default: false
-   },  
-   completedAt: {
-       type: Number,
-       default: null
-   }
+// configuring middleware 
+app.use(bodyParser.json());
+
+
+// app.post('/todos', (req, res) => {
+//    console.log(req.body);
+//     });
+
+
+app.post('/todos', (req, res) => {
+    var todo = new Todo({
+        text: req.body.text
+    });
+
+    todo.save().then((doc) => {
+        res.send(doc);
+    }, (e) => {
+        res.status(400).send(e);
+    });
 });
 
-// Creating Model for User
-var User = mongoose.model('User', {
-    email: {
-        type: String,
-        required: true,
-        minlength: 1,
-        trim: true
-    }
+app.listen(3000, () => {
+    console.log('Started on port 3000');
 });
-
-// create new instance of the User Model
-var user = new User({
-    email: '  adrianjade@gmail.com  '
-})
-
-// Save it 
-user.save().then((doc) => {
-    console.log(JSON.stringify(doc, undefined, 2));
-}, (err) => {
-    console.log('Unable to save users', err);
-});
-
-// var newTodo = new Todo({
-//     text: 'Cook dinner'
-// });
-
-// newTodo.save().then((doc) => {
-//     console.log('Saved todo', doc);
-// }, (e) => {
-//     console.log('Unable to save todo');
-// });
-
-// User
-// email - require it - trim it - set type - set min length of 1
-
-// var newTodo1 = new Todo({
-//     text: true
-// });
-
-// newTodo1.save().then((doc) => {
-//     console.log(JSON.stringify(doc, undefined, 2))
-//     // console.log('Saved Todo1', doc); 
-// }, (err) => {
-//     console.log('Unable to save', err);
-// });
-
