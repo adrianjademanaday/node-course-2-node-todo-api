@@ -29,19 +29,16 @@ MongoClient.connect('mongodb://localhost:27017/TodoApp', (err, db) => {
         console.log(result);
     });
 
-    // FOR DELETE USING FINDONEANDELETe USING THE _ID
+    // // FOR DELETE USING FINDONEANDELETe USING THE _ID
     db.collection('Users').findOneAndDelete({
         _id: new ObjectID('5c0f7f5c1ab14092dc54ffea') 
     }).then((result) => {
         console.log(JSON.stringify(result, undefined, 2));
     });
-
-
-
-
-
-
-
+    
+    // db.collection('Users').findOneAndDelete({name: 'Salas'}).then((result) => {
+    //     console.log(result);
+    // });
 
     //db.close();
 }); 
